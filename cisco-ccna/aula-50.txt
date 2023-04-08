@@ -1,0 +1,77 @@
+!##########################################################
+!
+!SWITCH - SW1
+!Primeiro atribua os IPs para as portas corretas e as ative.
+!
+!##########################################################
+
+hostname SW1
+no ip domain-lookup
+
+!== Senhas
+
+line console 0
+password senai
+login
+exit
+
+line vty 0 4
+password senai
+login
+exit
+
+line vty 5 15
+password senai
+login
+
+enable secret senai
+service password-encryption
+
+!== Interfaces
+
+int r f0/1-4
+switchport mode access
+
+int r f0/5-24
+switchport mode access
+shutdown
+
+int g0/2
+switchport mode access
+shutdown
+
+! Nota: A configuração do switch 2 é quase igual, lembre-se só de alterar o hostname para SW2
+!
+! Configurações de VLAN
+
+vlan 10
+name Alunos
+
+vlan 20
+name Admins
+
+vlan 80
+name Dead-End
+
+vlan 90
+name Native
+
+int vlan 20
+ip address 192.168.20.2 255.255.255.0
+
+int r f0/1-4
+switchport mode access
+switchport access vlan 10
+
+int r f0/5-24
+switchport mode access
+switchport access vlan 80
+
+int g0/1
+switchport mode trunk
+switchport trunk allowed vlan 10,20
+switchport trunk native vlan 90
+
+! Facilidades: Configure um servidor DHCP simples
+! 1. Configure o IP estático 192.168.10.3 Mask 255.255.255.0 Default-Gateway 192.168.10.1
+! 2. Ative uma pool de IPs
