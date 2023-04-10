@@ -1,0 +1,80 @@
+!== Config R-Azul
+
+hostname R-Azul
+no ip domain-lookup
+banner motd "Bem-vindo ao roteador azul. Acesso restrito a administradores."
+
+!== Senhas
+
+line con 0
+password senai
+login
+exit
+
+line vty 0 15
+password senai
+login
+exit
+
+enable secret senai
+service password-encryption
+
+!== Interfaces
+
+int g0/0/0
+no shut
+ip address 10.0.0.2 255.255.255.252
+
+int g0/0/1
+no shut
+
+int g0/0/1.192
+no shut
+encapsulation dot1Q 192
+ip address 192.168.0.1 255.255.255.128
+exit
+
+do wr
+
+!################################################
+
+!Config do Switch Azul
+
+!################################################
+
+hostname SW-Azul
+no ip domain-lookup
+banner motd "Bem-vindo ao roteador azul. Acesso restrito a administradores."
+
+!== Senhas
+
+line con 0
+password senai
+login
+exit
+
+line vty 0 15
+password senai
+login
+exit
+
+enable secret senai
+service password-encryption
+
+!== Interfaces
+
+int r f0/1-8
+switchport mode access
+switchport access vlan 192
+switchport port-security
+exit
+
+int r f0/9-23
+switchport mode access
+switchport acces vlan 1
+switchport port-security
+shutdown
+
+int g0/1
+switchport mode trunk
+switchport trunk allowed vlan 1,172,192
