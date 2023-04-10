@@ -1,0 +1,100 @@
+!Config R1
+!################################################
+
+hostname R1
+no ip domain-lookup
+banner motd "Bem-vindo ao roteador 1. Acesso restrito a administradores."
+
+!== Senhas
+
+line con 0
+password senai
+login
+exit
+
+line vty 0 15
+password senai
+login
+exit
+
+enable secret senai
+service password-encryption
+
+!== Interfaces
+
+int g0/0/0
+no shut
+
+int g0/0/0.20
+no shut
+encapsulation dot1Q 20
+ip address 192.168.0.2 255.255.248.0
+
+int g0/0/1
+no shut
+
+int g0/0/1.10
+no shut
+encapsulation dot1Q 10
+ip address 192.168.10.1 255.255.255.192
+ip helper-address 172.16.10.4
+exit
+
+
+SWITCH
+!Config do Switch Azul
+!################################################
+
+hostname SW-Azul
+no ip domain-lookup
+banner motd "Bem-vindo ao switch Azul. Acesso restrito a administradores."
+
+!== Senhas
+
+line con 0
+password senai
+login
+exit
+
+line vty 0 15
+password senai
+login
+exit
+
+enable secret senai
+service password-encryption
+
+
+!== Vlans
+
+vlan 10
+name Azul
+
+vlan 20
+name Verde
+
+vlan 30
+name Laranja
+
+vlan 40
+name Vermelho
+
+
+!== Interfaces
+
+int r f0/1-8, f0/24
+switchport mode access
+switchport access vlan 10
+switchport port-security
+exit
+
+int r f0/9-23
+switchport mode access
+switchport access vlan 1
+switchport port-security
+shutdown
+
+int r g0/1, g0/2
+switchport mode trunk
+switchport trunk allowed vlan 1,10,20,30,40
+switchport trunk native vlan 1
