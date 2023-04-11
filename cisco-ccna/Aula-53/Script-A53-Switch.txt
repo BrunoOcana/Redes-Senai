@@ -1,0 +1,54 @@
+hostname SW4
+no ip domain-lookup
+
+!= Vlans
+
+vlan 10
+name Esquerda
+
+vlan 11
+name MeioEsquerda
+
+vlan 12
+name MeioDireita
+
+vlan 14
+name Direita
+
+vlan 50
+name Backbone
+
+vlan 60
+name Dead-End
+exit
+
+!= Interfaces
+
+int r f0/1-8
+switchport mode access
+switchport access vlan 14
+switchport port-security
+exit
+
+int r f0/9-24
+switchport mode access
+switchport access vlan 60
+switchport port-security
+shutdown
+exit
+
+int g0/1
+switchport mode trunk
+switchport trunk allowed vlan 10,11,12,14,50,60
+switchport trunk native vlan 60
+exit
+
+int g0/2
+switchport mode access
+shutdown
+exit
+
+int vlan 50
+ip address 192.168.50.5 255.255.255.224
+no shut
+end

@@ -23,6 +23,7 @@ exit
 line vty 5 15
 password senai
 login
+exit
 
 enable secret senai
 service password-encryption
