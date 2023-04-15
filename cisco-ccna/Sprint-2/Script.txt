@@ -22,6 +22,14 @@ ip address 10.0.1.1 255.255.255.252
 no shut
 exit
 
+ip dhcp excluded-address 172.18.1.1
+
+ip dhcp pool mesa1
+network 172.18.1.0 255.255.255.240
+default-router 172.18.1.1
+dns-server 8.8.8.8
+exit
+
 ip route 172.18.1.0 255.255.255.240 10.0.0.1
 ip route 172.18.2.0 255.255.255.240 
 ip route 172.18.3.0 255.255.255.240 10.0.1.2
@@ -60,6 +68,14 @@ exit
 int g0/2
 ip address 10.0.1.1 255.255.255.252
 no shut
+exit
+
+ip dhcp excluded-address 172.18.2.1
+
+ip dhcp pool mesa2
+network 172.18.2.0 255.255.255.240
+default-router 172.18.2.1
+dns-server 8.8.8.8
 exit
 
 ip route 172.18.1.0 255.255.255.240 10.0.0.1
@@ -102,6 +118,14 @@ ip address 10.0.1.2 255.255.255.252
 no shut
 exit
 
+ip dhcp excluded-address 172.18.3.1
+
+ip dhcp pool mesa3
+network 172.18.3.0 255.255.255.240
+default-router 172.18.3.1
+dns-server 8.8.8.8
+exit
+
 ip route 172.18.1.0 255.255.255.240 10.0.1.1
 ip route 172.18.2.0 255.255.255.240 10.0.1.1
 ip route 172.18.3.0 255.255.255.240 
@@ -140,6 +164,14 @@ exit
 int g0/2
 ip address 10.0.3.1 255.255.255.252
 no shut
+exit
+
+ip dhcp excluded-address 172.18.4.1
+
+ip dhcp pool mesa4
+network 172.18.4.0 255.255.255.240
+default-router 172.18.4.1
+dns-server 8.8.8.8
 exit
 
 ip route 172.18.1.0 255.255.255.240 10.0.2.1
@@ -183,6 +215,14 @@ ip address 10.0.3.2 255.255.255.252
 no shut
 exit
 
+ip dhcp excluded-address 172.18.5.1
+
+ip dhcp pool mesa5
+network 172.18.5.0 255.255.255.240
+default-router 172.18.5.1
+dns-server 8.8.8.8
+exit
+
 ip route 172.18.1.0 255.255.255.240 10.0.3.1
 ip route 172.18.2.0 255.255.255.240 10.0.3.1
 ip route 172.18.3.0 255.255.255.240 10.0.3.1
@@ -223,6 +263,14 @@ ip address 10.0.5.1 255.255.255.252
 no shut
 exit
 
+ip dhcp excluded-address 172.18.6.1
+
+ip dhcp pool mesa6
+network 172.18.6.0 255.255.255.240
+default-router 172.18.6.1
+dns-server 8.8.8.8
+exit
+
 ip route 172.18.1.0 255.255.255.240 10.0.4.1
 ip route 172.18.2.0 255.255.255.240 10.0.4.1
 ip route 172.18.3.0 255.255.255.240 10.0.4.1
@@ -237,4 +285,117 @@ ip route 10.0.2.0 255.255.255.252 10.0.4.1
 ip route 10.0.3.0 255.255.255.252 10.0.4.1
 ip route 10.0.4.0 255.255.255.252 
 ip route 10.0.5.0 255.255.255.252 
+ 
+
+!R7
+!=============================
+
+en
+conf t
+
+hostname R7
+no ip domain-lookup
+
+int g0/0
+ip address 172.18.7.1 255.255.255.240
+no shut
+exit
+
+int g0/1
+ip address 192.168.1.2 255.255.255.252
+no shut
+exit
+
+int g0/2
+ip address 10.0.5.2 255.255.255.252
+no shut
+exit
+
+ip dhcp excluded-address 172.18.7.1
+
+ip dhcp pool mesa7
+network 172.18.7.0 255.255.255.240
+default-router 172.18.7.1
+dns-server 8.8.8.8
+exit
+
+ip route 172.18.1.0 255.255.255.240 10.0.5.1
+ip route 172.18.2.0 255.255.255.240 10.0.5.1
+ip route 172.18.3.0 255.255.255.240 10.0.5.1
+ip route 172.18.4.0 255.255.255.240 10.0.5.1
+ip route 172.18.5.0 255.255.255.240 10.0.5.1
+ip route 172.18.6.0 255.255.255.240 10.0.5.1
+ip route 172.18.7.0 255.255.255.240 
+ip route 0.0.0.0 0.0.0.0 192.168.1.1 150
+ip route 10.0.0.0 255.255.255.252 10.0.5.1
+ip route 10.0.1.0 255.255.255.252 10.0.5.1
+ip route 10.0.2.0 255.255.255.252 10.0.5.1
+ip route 10.0.3.0 255.255.255.252 10.0.5.1
+ip route 10.0.4.0 255.255.255.252 10.0.5.1
+ip route 10.0.5.0 255.255.255.252 
+ 
+
+!RB
+!=============================
+
+en
+conf t
+
+hostname RB
+no ip domain-lookup
+
+int g0/0
+ip address 172.16.32.250 255.255.255.0
+ip nat outside
+no shut
+exit
+
+int g0/1
+ip address 192.168.1.1 255.255.255.252
+ip nat inside
+no shut
+exit
+
+int g0/2
+ip address 192.168.0.1 255.255.255.252
+ip nat inside
+no shut
+exit
+
+access-list 2 permit 172.18.1.0 0.0.0.15
+access-list 2 permit 172.18.2.0 0.0.0.15
+access-list 2 permit 172.18.3.0 0.0.0.15
+access-list 2 permit 172.18.4.0 0.0.0.15
+access-list 2 permit 172.18.5.0 0.0.0.15
+access-list 2 permit 172.18.6.0 0.0.0.15
+access-list 2 permit 172.18.7.0 0.0.0.15
+
+ip route 172.18.1.0 255.255.255.240 192.168.0.2 1
+ip route 172.18.2.0 255.255.255.240 192.168.0.2 1
+ip route 172.18.3.0 255.255.255.240 192.168.0.2 1
+ip route 172.18.4.0 255.255.255.240 192.168.0.2 1
+ip route 172.18.5.0 255.255.255.240 192.168.0.2 10
+ip route 172.18.6.0 255.255.255.240 192.168.0.2 10
+ip route 172.18.7.0 255.255.255.240 192.168.0.2 10
+ip route 0.0.0.0 0.0.0.0 172.16.32.254 150
+ip route 10.0.0.0 255.255.255.252 192.168.0.2 1
+ip route 10.0.1.0 255.255.255.252 192.168.0.2 1
+ip route 10.0.2.0 255.255.255.252 192.168.0.2 1
+ip route 10.0.3.0 255.255.255.252 192.168.0.2 10
+ip route 10.0.4.0 255.255.255.252 192.168.0.2 10
+ip route 10.0.5.0 255.255.255.252 192.168.0.2 10
+
+ip route 172.18.1.0 255.255.255.240 192.168.1.2 10
+ip route 172.18.2.0 255.255.255.240 192.168.1.2 10
+ip route 172.18.3.0 255.255.255.240 192.168.1.2 10
+ip route 172.18.4.0 255.255.255.240 192.168.1.2 10
+ip route 172.18.5.0 255.255.255.240 192.168.1.2 1
+ip route 172.18.6.0 255.255.255.240 192.168.1.2 1
+ip route 172.18.7.0 255.255.255.240 192.168.1.2 1
+ip route 10.0.0.0 255.255.255.252 192.168.1.2 10
+ip route 10.0.1.0 255.255.255.252 192.168.1.2 10
+ip route 10.0.2.0 255.255.255.252 192.168.1.2 10
+ip route 10.0.3.0 255.255.255.252 192.168.1.2 1
+ip route 10.0.4.0 255.255.255.252 192.168.1.2 1
+ip route 10.0.5.0 255.255.255.252 192.168.1.2 1
  
