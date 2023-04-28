@@ -1,0 +1,14 @@
+== Criando uma partição ==
+fdisk [caminho-do-disco]
+Comando: n
+Comando: p
+
+- Usar opções default.
+- Repetir para todos os discos.
+
+== Instalando o programa para criação de raids ==
+apt update
+apt search mdadm
+apt install mdadm
+
+== Criando o array em raid ==
