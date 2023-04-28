@@ -12,3 +12,44 @@ apt search mdadm
 apt install mdadm
 
 == Criando o array em raid ==
+mdadm --create /dev/md0 --level=1 --devices=2 /dev/sdb1 /dev/sdc1
+
+#Se der disc busy >> desmontar os discos com comando umount [diretório]
+#Para ver qual diretório é o disco, comando lsblk
+
+== Preparando a partição de RAID ==
+mkfs.ext4 /dev/mod0
+
+#pegar os UUIDs
+blkid
+-- ou --
+blkid /dev/md0 | awk '{print $2}'
+
+#Passar os UUIDs pro fstab
+echo [copia e cola os UUIDs do blkid acima] >> /etc/fstab
+-- ou --
+blkid /dev/md0 | awk '{print $2}' >> /etc/fstab
+
+#Editar o fstab para salvar os discos após reboot
+nano /etc/fstab
+
+md0> UUID="código"	/[local de montagem]	ext4	0	0
+
+Ctrl+O (salvar) e depois Ctrl+X (Sair)
+
+mount -a
+
+== Preparando a partição de RAID para sempre ter o nome md0 ==
+#Puxa os detalhes e escaneia o dispositivo md0 e >> manda pro documento de configuração.
+mdadm --detail --scan /dev/md0 >> /etc/mdadm/mdadm.conf
+
+#entrar no documento e tirar as informações de:
+#"metadata" e "name" da linha do md0
+#Exemplo abaixo
+#ARRAY /dev/md0 UUID="código"
+
+#Aplicar as mudanças feitas no documento com:
+update-initramfs -u
+
+================= PRONTO =================
+Para verificar se deu certo, reinicie o sistema e use o comando lsblk para verificar se o nome do disco e seu ponto de montagem estão corretos com o que foi configurado anteriormente.
