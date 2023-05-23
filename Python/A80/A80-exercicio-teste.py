@@ -4,7 +4,8 @@ Nome = input("Qual o seu nome completo: ")
 while True:
     try:
         NDia, NMes, NAno = input("Qual a sua data de nascimento (dia,mês,ano):").split(",",2)
-        if int(NDia) and int(NMes) and int(NAno):
+        int(NDia); int (NMes); int(NAno)
+        if type(NDia) == int and type(NMes) == int and type(NAno) == int:
             break
     except:
       print ("Valor inválido. Digite somente números inteiros.")
