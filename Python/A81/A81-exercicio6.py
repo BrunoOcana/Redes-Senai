@@ -25,5 +25,8 @@ n1 = int(input("""Qual o número?
 #    {n16}  {n17}  {n18}  {n19}  {n110}""")
 
 #Modo usando o Range
-for tabuada in range(10):
-    print ("%d x %d = %d" % (n1, n1 * tabuada+1, n1 * (tabuada+1)))
+if n1 > 10 or n1 < 2:
+    print ("Insira um valor entre 1 e 10")
+else:
+    for tabuada in range(10):
+        print ("%d x %d = %d" % (n1, n1 * tabuada+1, n1 * (tabuada+1)))
