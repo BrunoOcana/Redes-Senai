@@ -1,5 +1,5 @@
 # Desenvolva um script em Python que receba um valor em reais (R$) e converta-o
-# para dólares. Considere que $1 = R$4,98. No resultado, exiba apenas duas casas
+# para dólares. Considere que $1 = R$4,91. No resultado, exiba apenas duas casas
 # decimais após a vírgula.
 
 print ("""Olá usuário.
@@ -8,7 +8,7 @@ brl = float(input("""Informe, por favor, qual é o valor em reais.
 R$: """))
 
 def converter():
-    usd = round(brl / 4.98, 2)
+    usd = round(brl / 4.91, 2)
     moedas = {"Real" : brl, "Dolar" : usd}
     return moedas
 
