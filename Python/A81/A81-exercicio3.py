@@ -9,10 +9,10 @@ n2 = float(input("""Qual o valor da segunda prova?
 """))
 n3 = float(input("""Qual o valor da terceira prova?
 """))
-n4 = float(input("""Qual o valor da quarta prova?
-"""))
 
-total = round((n1 + n2 + n3 + n4)/4, 2)
+total = round((n1 + n2 + n3)/3, 2)
 
-print (f"""Esta é a sua média:
-Média: {total}""")
+if total >= 6:
+    print (f"Parabéns, você passou! \n Sua nota foi {total}")
+else:
+    print (f"Infelizmente você reprovou nesta matéria. \n Sua nota foi {total}")
