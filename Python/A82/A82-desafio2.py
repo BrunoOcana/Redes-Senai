@@ -9,3 +9,4 @@ if vel > 80:
     print (f"Pagamento em até 1 semana!")
 elif vel <= 80:
     print ("Você não sofreu nenhuma penalidade.")
+    print ("Até logo.")
