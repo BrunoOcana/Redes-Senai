@@ -8,5 +8,6 @@ idade = input("Idade: ")
 
 if idade >= 18:
     print ("Você pode acessar o site normalmente.")
+    print (f"Seja bem-vindo {user}!")
 elif idade < 18:
     print ("Você não pode acessar o conteúdo desse site.")
