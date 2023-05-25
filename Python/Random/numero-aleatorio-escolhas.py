@@ -25,7 +25,7 @@ while True:
 	if escolha.lower() == "sim" or escolha.lower() == "s":
 		e1 = int(input("Escolha um número: "))
 		e2 = int(input("Escolha outro número (0 para pular): "))
-		e3 = int(input("Escolha um range (0 para pular): "))
+		e3 = int(input("Escolha um nível de aleatoriedade (0 para pular): "))
 		resposta = calculo(e1,e2,e3)
 		print (f"Sua resposta aleatória é: {resposta}.")
 		e4 = input("Você gostaria de repetir o processo?\nSim ou não: ")
