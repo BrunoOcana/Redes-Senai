@@ -15,7 +15,7 @@ def calculo(val,val2,rg):
         return cl
     else:
         animais = ["Gamba(s)","Girafa(s)","doninha(s)"]
-        cl = str(f"{val * range(1,11)} {random.choice(animais)}.")
+        cl = str(f"{val * random.choice(range(1,11))} {random.choice(animais)}.")
         return cl
 
 print("Olá. Você gostaria de uma resposta aleatória?")
