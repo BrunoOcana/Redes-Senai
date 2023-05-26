@@ -4,11 +4,15 @@
 # valores e imprima o resultado.
 
 def verif_par(n1):
-    nfinal = n1 / 2
-    if nfinal / 2 == type(int):
+    if n1 % 2 == 0:
         return True
     else:
         return False
     
 print("\nVerifique se o número é par.")
 numero = int(input("Escolha: "))
+
+if verif_par(numero) is True:
+    print("É um número par.")
+else:
+    print("Não é um número par.")
