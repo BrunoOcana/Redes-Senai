@@ -56,7 +56,7 @@ void loop() {
   // Lendo o sensor de luminosidade
   float l = analogRead(sensLuz);
 
-  if (t >= 0 && u > 0)
+  if (t != -1 && u != -1)
     {
         Serial.print("Temperatura: ");
         Serial.print(t);

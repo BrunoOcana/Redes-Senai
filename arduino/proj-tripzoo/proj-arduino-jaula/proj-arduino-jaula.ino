@@ -81,14 +81,19 @@ void loop() {
   
   if (dist < 10 && distancia > 5) {
     digitalWrite(distLed, LOW);
-    tone(buzzerPin, 400, 1000);
-    delay(500);
+    tone(buzzerPin, 400, 100);
+    delay(50);
+    noTone(buzzerPin);
   }
   
   if (dist <= 5) {
     digitalWrite(distLed, HIGH);
-    tone(buzzerPin, 1000, 1000);
+    tone(buzzerPin, 1000, 100);
     delay(200);
+    noTone(buzzerPin);
+    tone(buzzerPin, 1000, 100);
+    delay(200);
+    noTone(buzzerPin);
   }
   
   // Abrindo o portão
@@ -109,7 +114,7 @@ void loop() {
   s.detach();
 
   // Alarme do portão aberto
-  if (portaoAberto != 0) {
+  if (portaoAberto == 1) {
     digitalWrite(portaoLed, HIGH);
     tone(buzzerPin, 700, 1000);
     delay(50);
@@ -131,10 +136,7 @@ void loop() {
   char distStr[4];
   dtostrf(dist, 6, 1, distStr);
   client.publish(distancia, distStr);
-
-  // Esperar uma nova leitura
-  delay(2000);
-
+  delay(100);
 }
 
 void reconnect() {
