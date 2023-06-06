@@ -5,9 +5,9 @@
 #include <PubSubClient.h> // mqtt
 
 // Configurações do Ethernet
-byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xAA };  // Endereço MAC do Arduino
-IPAddress ip(172, 16, 32, 120);                      // Endereço IP do Arduino
-IPAddress server(172, 16, 32, 234);                   // Endereço IP do servidor MQTT
+byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xA9 };  // Endereço MAC do Arduino
+IPAddress ip(172, 16, 32, 119);                      // Endereço IP do Arduino
+IPAddress server(172, 16, 32, 206);                   // Endereço IP do servidor MQTT
 
 EthernetClient ethClient;
 PubSubClient client(ethClient);
@@ -16,7 +16,7 @@ PubSubClient client(ethClient);
 const char* luz = "mesa3-luz";  // Tópico MQTT para envio dos dados
 const char* temp = "mesa3-temperatura";  // Tópico MQTT para envio dos dados
 const char* umid = "mesa3-umidade";  // Tópico MQTT para envio dos dados
-const char* clientID = "arduino-data";   // ID do cliente MQTT
+const char* clientID = "mesa3-arduino-data";   // ID do cliente MQTT
 
 // Pinos do LCD
 const int rs = 2, en = 1, d4 = 4, d5 = 5, d6 = 6, d7 = 7;
@@ -56,7 +56,7 @@ void loop() {
   // Lendo o sensor de luminosidade
   float l = analogRead(sensLuz);
 
-  if (t != -1 && u != -1 && l != -1)
+  if (t >= 0 && u > 0)
     {
         Serial.print("Temperatura: ");
         Serial.print(t);

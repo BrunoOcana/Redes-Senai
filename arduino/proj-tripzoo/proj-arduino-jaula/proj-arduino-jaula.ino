@@ -10,9 +10,9 @@ int portaoAberto;
 Servo s;
 
 // Configurações do Ethernet
-byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xA9 };  // Endereço MAC do Arduino
-IPAddress ip(172, 16, 32, 119);                      // Endereço IP do Arduino
-IPAddress server(172, 16, 32, 234);                   // Endereço IP do servidor MQTT
+byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xAA };  // Endereço MAC do Arduino
+IPAddress ip(172, 16, 32, 120);                      // Endereço IP do Arduino
+IPAddress server(172, 16, 32, 206);                   // Endereço IP do servidor MQTT
 
 EthernetClient ethClient;
 PubSubClient client(ethClient);
