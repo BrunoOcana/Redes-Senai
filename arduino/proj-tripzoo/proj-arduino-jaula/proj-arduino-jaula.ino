@@ -1,9 +1,13 @@
 #include <SPI.h> // módulo de rede
 #include <UIPEthernet.h> // módulo de rede
 #include <PubSubClient.h> // mqtt
+#include <Servo.h>
+
+// Variáveis
 long duracao;
 float dist;
 int portaoAberto;
+Servo s;
 
 // Configurações do Ethernet
 byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xA9 };  // Endereço MAC do Arduino
@@ -25,6 +29,7 @@ const int portaoPin = 2;
 const int trigPin = 3;
 const int echoPin = 4;
 const int buzzerPin = 5;
+const int botaoPin = 7;
 
 void setup() {
   Ethernet.begin(mac, ip);
@@ -40,6 +45,7 @@ void setup() {
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
   pinMode(portaoPin, INPUT);
+  pinMode(botaoPin, INPUT_PULLUP);
 }
 
 long centimetros(long microsegundos)
@@ -84,22 +90,38 @@ void loop() {
     tone(buzzerPin, 1000, 1000);
     delay(200);
   }
+  
+  // Abrindo o portão
+  s.attach(8);
+  if(digitalRead(botaoPin) == LOW){
+    portaoAberto = 1;
+    for(int angulo = 0; angulo <= 90; angulo ++){
+      s.write(angulo);
+      delay(10);
+    }
+    delay(10000);
+    portaoAberto = 0;
+    for(int angulo = 90; angulo >= 0; angulo --){
+      s.write(angulo);
+      delay(10);
+    }
+  }
+  s.detach();
 
   // Alarme do portão aberto
   if (portaoAberto != 0) {
+    digitalWrite(portaoLed, HIGH);
     tone(buzzerPin, 700, 1000);
     delay(50);
+    digitalWrite(portaoLed, LOW);
     noTone(buzzerPin);
     delay(50);
+    digitalWrite(portaoLed, HIGH);
     tone(buzzerPin, 700, 1000);
     delay(50);
+    digitalWrite(portaoLed, LOW);
     noTone(buzzerPin);
-  }
-
-  // Fechar o portão
-  if (portaoAberto != 0) {
-    delay(30000);
-    portaoAberto = 0;    
+    delay(50);
   }
 
   // Converter os valores para string e publicar no MQTT
