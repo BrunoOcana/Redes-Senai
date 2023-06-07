@@ -7,6 +7,7 @@
 long duracao;
 float dist;
 int portaoAberto;
+int angulo;
 Servo s;
 
 // Configurações do Ethernet
@@ -38,6 +39,7 @@ void setup() {
   client.setServer(server, 1883);
 
   Serial.begin(9600);
+  s.attach(8);
 
   pinMode(buzzerPin, OUTPUT);
   pinMode(portaoLed, OUTPUT);
@@ -89,32 +91,31 @@ void loop() {
   if (dist <= 5) {
     digitalWrite(distLed, HIGH);
     tone(buzzerPin, 1000, 100);
-    delay(200);
+    delay(100);
     noTone(buzzerPin);
+    digitalWrite(distLed, LOW);
     tone(buzzerPin, 1000, 100);
-    delay(200);
+    delay(100);
     noTone(buzzerPin);
   }
   
   // Abrindo o portão
-  s.attach(8);
   if(digitalRead(botaoPin) == LOW){
     portaoAberto = 1;
-    for(int angulo = 0; angulo <= 90; angulo ++){
+    for( angulo = 0; angulo <= -90; angulo ++){
       s.write(angulo);
       delay(10);
     }
-    delay(10000);
+    delay(5000);
     portaoAberto = 0;
-    for(int angulo = 90; angulo >= 0; angulo --){
+    for( angulo = -90; angulo >= 0; angulo --){
       s.write(angulo);
       delay(10);
     }
   }
-  s.detach();
 
   // Alarme do portão aberto
-  if (portaoAberto == 1) {
+  if (portaoAberto == 100) {
     digitalWrite(portaoLed, HIGH);
     tone(buzzerPin, 700, 1000);
     delay(50);

@@ -70,6 +70,7 @@ void loop() {
         Serial.print(l);
         Serial.println(" un");
 
+        lcd.clear();
         lcd.setCursor(0,0);
         lcd.print("Temp: ");
         lcd.print(t);
@@ -78,8 +79,6 @@ void loop() {
         lcd.print("Umid: ");
         lcd.print(u);
         lcd.print(" %");
-        lcd.noCursor();
-        delay(2000);
     }
     else
     {
@@ -90,8 +89,6 @@ void loop() {
         lcd.print("Erro!");
         lcd.setCursor(0,1);
         lcd.print("Coletar Dados");
-        lcd.noCursor();
-        delay(2000);
     }
 
   // Converter os valores para string e publicar no MQTT
@@ -111,7 +108,7 @@ void loop() {
 
 void reconnect() {
   while (!client.connected()) {
-    Serial.print("Conectando ao servidor MQTT...");
+    Serial.println("Conectando ao servidor MQTT...");
     
     if (client.connect(clientID)) {
       Serial.println("conectado!");
@@ -120,7 +117,7 @@ void reconnect() {
       Serial.print(client.state());
       Serial.println(" Tentando novamente em 5 segundos...");
       
-      delay(10000);  // Aguarda 5 segundos antes de tentar a conexão novamente
+      delay(5000);  // Aguarda 5 segundos antes de tentar a conexão novamente
     }
   }
 }
