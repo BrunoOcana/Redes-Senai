@@ -102,20 +102,20 @@ void loop() {
   // Abrindo o portão
   if(digitalRead(botaoPin) == LOW){
     portaoAberto = 1;
-    for( angulo = 0; angulo <= -90; angulo ++){
+    for( angulo = 0; angulo <= 90; angulo ++){
       s.write(angulo);
       delay(10);
     }
     delay(5000);
     portaoAberto = 0;
-    for( angulo = -90; angulo >= 0; angulo --){
+    for( angulo = 90; angulo >= 0; angulo --){
       s.write(angulo);
       delay(10);
     }
   }
 
   // Alarme do portão aberto
-  if (portaoAberto == 100) {
+  if (portaoAberto == 1) {
     digitalWrite(portaoLed, HIGH);
     tone(buzzerPin, 700, 1000);
     delay(50);
