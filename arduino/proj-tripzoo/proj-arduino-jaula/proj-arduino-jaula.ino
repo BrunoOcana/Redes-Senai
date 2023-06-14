@@ -8,7 +8,13 @@ long duracao;
 float dist;
 int portaoAberto;
 int angulo;
+int alerta;
 Servo s;
+
+// LEDs
+int l1;
+int l2;
+int l3;
 
 // Configurações do Ethernet
 byte mac[] = { 0xDE, 0xAD, 0xBE, 0xEF, 0xFE, 0xAA };  // Endereço MAC do Arduino
@@ -24,13 +30,14 @@ const char* distancia = "mesa3-distancia";  // Tópico MQTT para envio dos dados
 const char* clientID = "arduino-jaula";   // ID do cliente MQTT
 
 // Pinos
-const int portaoLed = 0;
-const int distLed = 1;
-const int portaoPin = 2;
-const int trigPin = 3;
-const int echoPin = 4;
-const int buzzerPin = 5;
-const int botaoPin = 7;
+#define closeLed 0
+#define middleLed 1
+#define distLed 2
+#define trigPin 3
+#define echoPin 4
+#define buzzerPin 5
+#define potPin A0
+#define servoPin 8
 
 void setup() {
   Ethernet.begin(mac, ip);
@@ -41,17 +48,19 @@ void setup() {
   Serial.begin(9600);
   s.attach(8);
 
-  pinMode(buzzerPin, OUTPUT);
-  pinMode(portaoLed, OUTPUT);
+  pinMode(closeLed, OUTPUT);
+  pinMode(middleLed, OUTPUT);
   pinMode(distLed, OUTPUT);
+  
+  pinMode(buzzerPin, OUTPUT);
   pinMode(trigPin, OUTPUT);
   pinMode(echoPin, INPUT);
-  pinMode(portaoPin, INPUT);
-  pinMode(botaoPin, INPUT_PULLUP);
+
+  pinMode(servoPin, INPUT);
+  pinMode(potPin, INPUT);
 }
 
-long centimetros(long microsegundos)
-{
+long centimetros(long microsegundos) {
   return microsegundos / 29 / 2;
 }
 
@@ -64,6 +73,22 @@ void loop() {
 
   client.loop();
   
+  // Controlando o portão
+  float controlePortao = map(analogRead(potPin), 0, 1023, 0, 90);
+  // analogWrite(servoPin, controlePortao);
+  
+  for (angulo < 90; angulo < controlePortao; angulo ++){
+    s.write(angulo);
+    delay(10);
+  }
+  // for(int angulo = 0; angulo <= -90; angulo ++){
+  // for(int angulo = -90; angulo >= 0; angulo --){
+  for (angulo > 0; angulo > controlePortao; angulo --){
+    s.write(angulo);
+    delay(10);
+  }
+
+
   // Limpa o sinal para melhor detecção
   digitalWrite(trigPin, LOW);
   delayMicroseconds(2);
@@ -76,59 +101,49 @@ void loop() {
   dist = centimetros(duracao);
   
   // Alerta de proximidade
-  if (distancia > 10) {
-    digitalWrite(distLed, LOW);
-    noTone(buzzerPin);
+  if (distancia > 15) {
+    l1 = "LOW";
+    l2 = "LOW";
+    l3 = "HIGH";
+    alerta = 0;
+    Serial.println("Alerta nível 0.");
+  } else if (dist < 15 && distancia > 7) {
+    l1 = "LOW";
+    l2 = "HIGH";
+    l3 = "HIGH";
+    alerta = 1;
+    Serial.println("Alerta nível 1.");
+  } else if (dist <= 7) {
+    l1 = "HIGH";
+    l2 = "HIGH";
+    l3 = "HIGH";
+    alerta = 2;
+    Serial.println("Alerta nível 2.");
+  } else {
+    l1 = "LOW";
+    l2 = "LOW";
+    l3 = "LOW";
+    alerta = -1;
+    Serial.println("Erro ao ler a proximidade.");
   }
-  
-  if (dist < 10 && distancia > 5) {
-    digitalWrite(distLed, LOW);
-    tone(buzzerPin, 400, 100);
-    delay(50);
+    
+  // Buzzer
+  if (alerta < 1) {
     noTone(buzzerPin);
-  }
-  
-  if (dist <= 5) {
-    digitalWrite(distLed, HIGH);
+  } else if (alerta = 1) {
+    tone(buzzerPin, 1000, 200);
+    delay(200);
+    noTone(buzzerPin);
+  } else if (alerta = 2) {
     tone(buzzerPin, 1000, 100);
     delay(100);
     noTone(buzzerPin);
-    digitalWrite(distLed, LOW);
-    tone(buzzerPin, 1000, 100);
-    delay(100);
-    noTone(buzzerPin);
-  }
-  
-  // Abrindo o portão
-  if(digitalRead(botaoPin) == LOW){
-    portaoAberto = 1;
-    for( angulo = 0; angulo <= 90; angulo ++){
-      s.write(angulo);
-      delay(10);
-    }
-    delay(5000);
-    portaoAberto = 0;
-    for( angulo = 90; angulo >= 0; angulo --){
-      s.write(angulo);
-      delay(10);
-    }
   }
 
-  // Alarme do portão aberto
-  if (portaoAberto == 1) {
-    digitalWrite(portaoLed, HIGH);
-    tone(buzzerPin, 700, 1000);
-    delay(50);
-    digitalWrite(portaoLed, LOW);
-    noTone(buzzerPin);
-    delay(50);
-    digitalWrite(portaoLed, HIGH);
-    tone(buzzerPin, 700, 1000);
-    delay(50);
-    digitalWrite(portaoLed, LOW);
-    noTone(buzzerPin);
-    delay(50);
-  }
+  // LEDs
+  digitalWrite(closeLed, l1);
+  digitalWrite(middleLed, l2);
+  digitalWrite(distLed, l3);
 
   // Converter os valores para string e publicar no MQTT
   char portaoStr[4];
